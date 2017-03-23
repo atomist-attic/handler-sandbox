@@ -1,5 +1,5 @@
 # Atomist 'sandbox-handlers'
-
+[![Build Status](https://travis-ci.org/atomist-rugs/handler-sandbox.svg?branch=master)](https://travis-ci.org/atomist-rugs/handler-sandbox)
 [![Slack Status](https://join.atomist.com/badge.svg)](https://join.atomist.com/)
 
 Playground for Rug _handlers_. Don't rely on this being up to date, accurate, idiomatic etc. Just have fun!
