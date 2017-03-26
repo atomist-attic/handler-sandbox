@@ -3,7 +3,7 @@ import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, P
 
 @CommandHandler("TheBigLebowski", "Get a random quote from the The Big Lebowski")
 @Tags("dude", "walter", "Lebowski, quote")
-@Intent("the dude", "big lebowski")
+@Intent("the dude", "big lebowski", "what would the dude say")
 class GetTheBigLebowskiQuote implements HandleCommand {
 
     handle(ctx: HandlerContext): Plan {
@@ -33,6 +33,7 @@ class BigLebowskiResponder implements HandleResponse<any>{
     // Sanitize text
     text = text.split("fucking").join("f******")
     text = text.split("fuck").join("f***")
+    text = text.split("Fuck").join("F***")
     text = text.split("FUCKING").join("F******")
     text = text.split("FUCK").join("F***")
     text = text.split("Fucked").join("F*****")
