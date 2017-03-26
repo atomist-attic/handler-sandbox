@@ -3,7 +3,7 @@ import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, P
 
 @CommandHandler("TheBigLebowski", "Get a random quote from the The Big Lebowski")
 @Tags("dude", "walter", "Lebowski, quote")
-@Intent("the dude", "big lebowski", "what would the dude say")
+@Intent("the dude", "big lebowski", "what would the dude say?")
 class GetTheBigLebowskiQuote implements HandleCommand {
 
     handle(ctx: HandlerContext): Plan {
