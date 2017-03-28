@@ -78,3 +78,19 @@ executor:
     - "maven_user": "t***************y"
     - "maven_token": "z**************7"
 
+---
+kind: "operation"
+client: "rug-cli 0.28.0"
+editor:
+  name: "AddTypeScriptEditor"
+  group: "atomist-rugs"
+  artifact: "rug-editors"
+  version: "0.22.0"
+  origin:
+    repo: "https://github.com/atomist-rugs/rug-editors.git"
+    branch: "1e6a9f0f941441a2d3b461d7af3ce803b2e3c845"
+    sha: "1e6a9f0"
+  parameters:
+    - "editorName": "UpdateChangeLogForRelease"
+    - "description": "move unreleased entries in change log under a release"
+
