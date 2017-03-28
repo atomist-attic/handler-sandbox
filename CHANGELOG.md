@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist-rugs/handler-sandbox/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/atomist-rugs/handler-sandbox/compare/0.6.0...HEAD
+
+## [0.6.0] - 2017-03-28
+
+[0.6.0]: https://github.com/atomist-rugs/handler-sandbox/compare/0.5.0...0.6.0
+
+Release release
 
 ### Added
 

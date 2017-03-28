@@ -111,3 +111,19 @@ editor:
     - "description": "prepare and cut a release in a repository"
     - "intent": "release"
 
+---
+kind: "operation"
+client: "rug-cli 0.28.0"
+editor:
+  name: "UpdateChangeLogForRelease"
+  group: "atomist-rugs"
+  artifact: "sandbox"
+  version: "0.5.1"
+  origin:
+    repo: "git@github.com:atomist-rugs/handler-sandbox.git"
+    branch: "master"
+    sha: "afa87bf"
+  parameters:
+    - "version": "0.6.0"
+    - "name": "Release"
+
