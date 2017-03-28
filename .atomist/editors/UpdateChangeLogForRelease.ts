@@ -20,6 +20,8 @@ import { Pattern } from '@atomist/rug/operations/RugOperation';
 import { Editor, Parameter, Tags } from '@atomist/rug/operations/Decorators';
 import { File } from '@atomist/rug/model/File';
 
+import { CommonParameters } from '../utils/Parameters';
+
 /**
  * Insert a new release header and name in a change log file.
  */
@@ -28,22 +30,12 @@ import { File } from '@atomist/rug/model/File';
 export class UpdateChangeLogForRelease implements EditProject {
 
     @Parameter({
-        displayName: "Release Version",
-        description: "semantic version to release",
-        pattern: "^\\d+\\.\\d+\\.\\d+$",
-        validInput: "a valid semantic version of the form M.N.P, e.g., 1.2.3",
-        minLength: 5,
-        maxLength: 100
+        ...CommonParameters.versionParameter
     })
     version: string;
 
     @Parameter({
-        displayName: "Release Name",
-        description: "name for release",
-        pattern: Pattern.any,
-        validInput: "a description of the valid input",
-        minLength: 1,
-        maxLength: 50
+        ...CommonParameters.nameParameter
     })
     name: string;
 

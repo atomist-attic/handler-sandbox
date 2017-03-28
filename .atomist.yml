@@ -94,3 +94,20 @@ editor:
     - "editorName": "UpdateChangeLogForRelease"
     - "description": "move unreleased entries in change log under a release"
 
+---
+kind: "operation"
+client: "rug-cli 0.28.0"
+editor:
+  name: "AddTypeScriptCommandHandler"
+  group: "atomist-rugs"
+  artifact: "rug-editors"
+  version: "0.22.0"
+  origin:
+    repo: "https://github.com/atomist-rugs/rug-editors.git"
+    branch: "1e6a9f0f941441a2d3b461d7af3ce803b2e3c845"
+    sha: "1e6a9f0"
+  parameters:
+    - "handlerName": "CreateReleaseHandler"
+    - "description": "prepare and cut a release in a repository"
+    - "intent": "release"
+
