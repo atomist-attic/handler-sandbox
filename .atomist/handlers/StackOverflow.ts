@@ -2,18 +2,10 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import * as mustache from 'mustache'
 
-let SOAnswers = `{
-  "attachments": [
-    {{#answers}}
-    {
-      "fallback": "Stack Overflow answers",
-      "color": "#36a64f",
-      "title": "{{{title}}}",
-      "title_link": "{{{link}}}"
-    }{{^last}}, {{/last}}
-    {{/answers}}
-  ]
-}`
+let SOAnswers = `
+{{#answers}}{{{link}}}
+{{^last}}{{/last}}
+{{/answers}}`
 
 //render for slack
 function renderAnswers(response: any): string {
@@ -27,7 +19,7 @@ function renderAnswers(response: any): string {
 }
 
 @CommandHandler("StackOverflow", "Query Stack Overflow")
-@Tags("StackExchange", "StackOverflow")
+@Tags("StackOverflow")
 @Intent("stack overflow", "stack-overflow")
 class GetSOAnswer implements HandleCommand {
 
@@ -48,7 +40,6 @@ class SOResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Message {
     return new Message(renderAnswers(response.body()))
-//    console.log(response.body())
   }
 }
 
