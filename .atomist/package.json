@@ -1,8 +1,6 @@
 {
     "dependencies": {
-        "@atomist/rug": "0.18.3",
-        "@atomist/cortex": "0.18.3",
-        "@atomist/github": "0.2.0",
+        "@atomist/rugs": "0.15.0",
         "mustache": "^2.3.0"
     },
     "devDependencies": {
