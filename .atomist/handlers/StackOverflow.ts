@@ -2,17 +2,36 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import * as mustache from 'mustache'
 
-let SOAnswers = `
-{{#answers}}{{{link}}}
-{{^last}}{{/last}}
-{{/answers}}`
+let SearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=relevance&site=stackoverflow&q=`
 
 //render for slack
 function renderAnswers(response: any): string {
   response['items'][ response['items'].length - 1 ].last = true;
+  response.query = SearchURL;
+  console.log(SearchURL);
   try{
-    return mustache.render(SOAnswers,
-  {answers: response.items})
+    return mustache.render(`{
+  "attachments": [
+{{#answers.items}}
+    {
+      "fallback": "{{{title}}}",
+      "author_name": "{{{owner.display_name}}}",
+      "author_link": "{{{owner.link}}}",
+      "author_icon": "{{{owner.profile_image}}}",
+      "title": "{{{title}}}",
+      "title_link": "{{{link}}}",
+      "thumb_url": "https://slack-imgs.com/?c=1&o1=wi75.he75&url=https%3A%2F%2Fcdn.sstatic.net%2FSites%2Fstackoverflow%2Fimg%2Fapple-touch-icon%402.png%3Fv%3D73d79a89bded",
+      "footer": "{{#tags}}{{.}}  {{/tags}}",
+      "ts": {{{last_activity_date}}}
+    }{{^last}},{{/last}}
+{{/answers.items}},
+		{
+			"title": "See more >",
+			"title_link": "${SearchURL}"
+		}
+  ]
+}`,
+  {answers: response})
   }catch(ex) {
     return `Failed to render message using template: ${ex}`
   }
@@ -20,7 +39,7 @@ function renderAnswers(response: any): string {
 
 @CommandHandler("StackOverflow", "Query Stack Overflow")
 @Tags("StackOverflow")
-@Intent("stack overflow", "stack-overflow")
+@Intent("stacko", "stack overflow")
 class GetSOAnswer implements HandleCommand {
 
     @Parameter({description: "Enter your search query", pattern: "^.*$"})
@@ -44,12 +63,13 @@ class SOResponder implements HandleResponse<any>{
 }
 
 function search (query: string): Respondable<Execute> {
+    SearchURL = SearchURL + query;
     return {instruction:
               {name: "http",
               kind: "execute",
               parameters:
                   {method: "get",
-                    url: `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=activity&site=stackoverflow&q=${query}`}},
+                    url: SearchURL}},
                     onSuccess: {kind: "respond", name: "SendSOAnswer", parameters: { query: query }}}
 }
 
