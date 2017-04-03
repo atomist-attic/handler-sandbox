@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist-rugs/handler-sandbox/compare/0.6.0...HEAD
 
+### Removed
+
+-   Moved release Rugs to release-rugs
+
 ## [0.6.0] - 2017-03-28
 
 [0.6.0]: https://github.com/atomist-rugs/handler-sandbox/compare/0.5.0...0.6.0
