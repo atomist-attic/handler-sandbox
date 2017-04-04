@@ -29,9 +29,9 @@ export let stockQuote = new GetStockQuote();
 @ResponseHandler("SendStockQuote", "Prints out stock quote message")
 class StockQuoteResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Message {
+  handle(@ParseJson response: Response<any>) : Plan {
     let quote = response.body().query.results.quote
-    return new Message(`Latest price for ${quote.Name} (${quote.Symbol}) is ${quote.LastTradePriceOnly}${quote.Currency} (${quote.Change_PercentChange})`)
+    return Plan.ofMessage(new Message(`Latest price for ${quote.Name} (${quote.Symbol}) is ${quote.LastTradePriceOnly}${quote.Currency} (${quote.Change_PercentChange})`));
   }
 }
 

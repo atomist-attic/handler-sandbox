@@ -25,8 +25,8 @@ export let searcher = new KittySearch();
 @ResponseHandler("SendSnippets", "Sends kitty video links to slack")
 class KittiesResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Message {
-    return new Message(renderKitties(response.body()))
+  handle(@ParseJson response: Response<any>) : Plan {
+    return Plan.ofMessage(new Message(renderKitties(response.body())));
   }
 }
 

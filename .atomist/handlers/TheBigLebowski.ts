@@ -26,7 +26,7 @@ export let theBigLebowskiQuote = new GetTheBigLebowskiQuote();
 @ResponseHandler("SendBigLebowskiQuote", "Prints out a Big Lebowski quote")
 class BigLebowskiResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Message {
+  handle(@ParseJson response: Response<any>) : Plan {
     let quote = response.body().quote.lines[0]
     let character = quote.character.name
     var text = quote.text as string
@@ -38,7 +38,7 @@ class BigLebowskiResponder implements HandleResponse<any>{
     text = text.split("FUCK").join("F***")
     text = text.split("Fucked").join("F*****")
     text = text.split("fucked").join("f*****")
-    return new Message(`${character}: _ ${text} _`)
+    return Plan.ofMessage(new Message(`${character}: _ ${text} _`));
   }
 }
 
