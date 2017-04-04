@@ -28,7 +28,7 @@ class XkcdComicResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
     let comic = response.body()
-    return return Plan.ofMessage(new Message(
+    return Plan.ofMessage(new Message(
       `{
           "attachments": [
               {
