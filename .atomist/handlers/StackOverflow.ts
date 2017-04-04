@@ -58,12 +58,13 @@ export let SOAnswer = new GetSOAnswer();
 class SOResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Message {
-    return new Message(renderAnswers(response.body()))
+    return new Message(renderAnswers(response.body()));
   }
 }
 
 function search (query: string): Respondable<Execute> {
     APISearchURL = encodeURI(APISearchURL + query);
+    console.log(APISearchURL);
     SearchURL = encodeURI(SearchURL + query);
 
     return {instruction:
