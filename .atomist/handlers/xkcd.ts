@@ -26,9 +26,9 @@ export let xkcdComic = new GetXkcdComic();
 @ResponseHandler("SendXkcdComic", "Shows xkcd comic of the day")
 class XkcdComicResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Message {
+  handle(@ParseJson response: Response<any>) : Plan {
     let comic = response.body()
-    return new Message(
+    return return Plan.ofMessage(new Message(
       `{
           "attachments": [
               {
@@ -39,6 +39,7 @@ class XkcdComicResponder implements HandleResponse<any>{
               }
           ]
       }`
+    )
     )
   }
 }

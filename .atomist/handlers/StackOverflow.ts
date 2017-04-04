@@ -57,9 +57,9 @@ export let SOAnswer = new GetSOAnswer();
 @ResponseHandler("SendSOAnswer", "Shows answers to a query on Stack Overflow")
 class SOResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Message {
-    return new Message(renderAnswers(response.body()));
-  }
+  handle(@ParseJson response: Response<any>) : Plan {
+   return Plan.ofMessage(new Message(renderAnswers(response.body())));
+   }
 }
 
 function search (query: string): Respondable<Execute> {
