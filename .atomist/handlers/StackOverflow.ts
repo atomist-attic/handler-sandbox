@@ -3,7 +3,7 @@ import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Pa
 import * as mustache from 'mustache'
 
 let APISearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=relevance&site=stackoverflow&q=`
-let SearchURL = `http://stackoverflow.com/search?q=`
+let SearchURL = `http://stackoverflow.com/search?order=desc&sort=relevance&q=`
 
 //render for slack
 function renderAnswers(response: any): string {
@@ -58,13 +58,12 @@ export let SOAnswer = new GetSOAnswer();
 class SOResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
-   return Plan.ofMessage(new Message(renderAnswers(response.body())));
+    return Plan.ofMessage(new Message(renderAnswers(response.body())));
    }
 }
 
 function search (query: string): Respondable<Execute> {
     APISearchURL = encodeURI(APISearchURL + query);
-    console.log(APISearchURL);
     SearchURL = encodeURI(SearchURL + query);
 
     return {instruction:
