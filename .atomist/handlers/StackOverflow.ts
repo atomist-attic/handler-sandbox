@@ -2,11 +2,14 @@ import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, R
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import * as mustache from 'mustache'
 
-let APISearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=relevance&site=stackoverflow&q=`
-let SearchURL = `http://stackoverflow.com/search?order=desc&sort=relevance&q=`
+const APISearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=relevance&site=stackoverflow&q=`
+const SearchURL = `http://stackoverflow.com/search?order=desc&sort=relevance&q=`
 
 //render for slack
 function renderAnswers(response: any): string {
+  if (response['items'].length == 0) {
+    return "No answers found."
+  }
   response['items'][ response['items'].length - 1 ].last = true;
 
   try{
@@ -63,15 +66,14 @@ class SOResponder implements HandleResponse<any>{
 }
 
 function search (query: string): Respondable<Execute> {
-    APISearchURL = encodeURI(APISearchURL + query);
-    SearchURL = encodeURI(SearchURL + query);
-
+    let searchUrl = encodeURI(APISearchURL + query);
+    
     return {instruction:
               {name: "http",
               kind: "execute",
               parameters:
                   {method: "get",
-                    url: APISearchURL}},
+                    url: searchUrl}},
                     onSuccess: {kind: "respond", name: "SendSOAnswer", parameters: { query: query }}}
 }
 
