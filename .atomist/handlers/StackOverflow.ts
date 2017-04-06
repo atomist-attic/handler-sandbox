@@ -6,7 +6,7 @@ const APISearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=
 const SearchURL = `http://stackoverflow.com/search?order=desc&sort=relevance&q=`
 
 //render for slack
-function renderAnswers(response: any): string {
+function renderAnswers(response: any, query: string): string {
   if (response['items'].length == 0) {
     return "No answers found."
   }
@@ -30,7 +30,7 @@ function renderAnswers(response: any): string {
 {{/answers.items}},
 		{
 			"title": "See more >",
-			"title_link": "${SearchURL}"
+			"title_link": "${SearchURL + query}"
 		}
   ]
 }`,
@@ -60,8 +60,11 @@ export let SOAnswer = new GetSOAnswer();
 @ResponseHandler("SendSOAnswer", "Shows answers to a query on Stack Overflow")
 class SOResponder implements HandleResponse<any>{
 
+  @Parameter({description: "Enter your search query", pattern: "^.*$"})
+  query: string;
+
   handle(@ParseJson response: Response<any>) : Plan {
-    return Plan.ofMessage(new Message(renderAnswers(response.body())));
+    return Plan.ofMessage(new Message(renderAnswers(response.body(), this.query)));
    }
 }
 
