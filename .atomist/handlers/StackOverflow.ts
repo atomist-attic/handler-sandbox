@@ -64,7 +64,7 @@ class SOResponder implements HandleResponse<any>{
   query: string;
 
   handle(@ParseJson response: Response<any>) : Plan {
-    return Plan.ofMessage(new Message(renderAnswers(response.body(), this.query)));
+    return Plan.ofMessage(new Message(renderAnswers(response.body(), encodeURI(this.query))));
    }
 }
 
