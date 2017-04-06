@@ -42,7 +42,7 @@ function renderAnswers(response: any, query: string): string {
 
 @CommandHandler("StackOverflow", "Query Stack Overflow")
 @Tags("StackOverflow")
-@Intent("stacko", "stackoverflow", "stack overflow")
+@Intent("stacko")
 class GetSOAnswer implements HandleCommand {
 
     @Parameter({description: "Enter your search query", pattern: "^.*$"})
