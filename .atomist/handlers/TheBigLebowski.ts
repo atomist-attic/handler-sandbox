@@ -1,4 +1,4 @@
-import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message } from '@atomist/rug/operations/Handlers'
+import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage } from '@atomist/rug/operations/Handlers'
 import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
 
 @CommandHandler("TheBigLebowski", "Get a random quote from the The Big Lebowski")
@@ -27,7 +27,7 @@ export let theBigLebowskiQuote = new GetTheBigLebowskiQuote();
 class BigLebowskiResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
-    let quote = response.body().quote.lines[0]
+    let quote = (response.body as any).quote.lines[0]
     let character = quote.character.name
     var text = quote.text as string
     // Sanitize text
@@ -38,7 +38,7 @@ class BigLebowskiResponder implements HandleResponse<any>{
     text = text.split("FUCK").join("F***")
     text = text.split("Fucked").join("F*****")
     text = text.split("fucked").join("f*****")
-    return Plan.ofMessage(new Message(`${character}: _ ${text} _`));
+    return Plan.ofMessage(new ResponseMessage(`${character}: _ ${text} _`));
   }
 }
 

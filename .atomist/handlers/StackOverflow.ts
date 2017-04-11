@@ -1,4 +1,4 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
+import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import * as mustache from 'mustache'
 
@@ -64,7 +64,7 @@ class SOResponder implements HandleResponse<any>{
   query: string;
 
   handle(@ParseJson response: Response<any>) : Plan {
-    return Plan.ofMessage(new Message(renderAnswers(response.body(), encodeURI(this.query))));
+    return Plan.ofMessage(new ResponseMessage(renderAnswers(response.body, encodeURI(this.query)), MessageMimeTypes.SLACK_JSON));
    }
 }
 

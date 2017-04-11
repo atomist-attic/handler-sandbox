@@ -1,4 +1,4 @@
-import {HandleResponse, HandleEvent, Execute, Respondable, HandleCommand, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
+import {HandleResponse, HandleEvent, Execute, Respondable, HandleCommand, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
 import {TreeNode, Match, PathExpression} from '@atomist/rug//tree/PathExpression'
 import {EventHandler, ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 import {Project} from '@atomist/rug/model/Core'
@@ -26,7 +26,7 @@ export let searcher = new KittySearch();
 class KittiesResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
-    return Plan.ofMessage(new Message(renderKitties(response.body())));
+    return Plan.ofMessage(new ResponseMessage(renderKitties(response.body), MessageMimeTypes.SLACK_JSON));
   }
 }
 

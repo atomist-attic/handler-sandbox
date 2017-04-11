@@ -1,4 +1,4 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
+import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
 @CommandHandler("xkcd", "Get the xkcd comic of the day")
@@ -27,8 +27,9 @@ export let xkcdComic = new GetXkcdComic();
 class XkcdComicResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
-    let comic = response.body()
-    return Plan.ofMessage(new Message(
+    let comic = response.body as any
+    
+    return Plan.ofMessage(new ResponseMessage(
       `{
           "attachments": [
               {
@@ -38,7 +39,7 @@ class XkcdComicResponder implements HandleResponse<any>{
                   "image_url": "${comic.img}"
               }
           ]
-      }`
+      }`, MessageMimeTypes.SLACK_JSON
     )
     )
   }

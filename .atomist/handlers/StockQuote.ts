@@ -1,4 +1,4 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, Message} from '@atomist/rug/operations/Handlers'
+import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage} from '@atomist/rug/operations/Handlers'
 import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
 
 @CommandHandler("StockQuote", "Get a real-time stock quote")
@@ -30,8 +30,8 @@ export let stockQuote = new GetStockQuote();
 class StockQuoteResponder implements HandleResponse<any>{
 
   handle(@ParseJson response: Response<any>) : Plan {
-    let quote = response.body().query.results.quote
-    return Plan.ofMessage(new Message(`Latest price for ${quote.Name} (${quote.Symbol}) is ${quote.LastTradePriceOnly}${quote.Currency} (${quote.Change_PercentChange})`));
+    let quote = (response.body as any).query.results.quote
+    return Plan.ofMessage(new ResponseMessage(`Latest price for ${quote.Name} (${quote.Symbol}) is ${quote.LastTradePriceOnly}${quote.Currency} (${quote.Change_PercentChange})`));
   }
 }
 
