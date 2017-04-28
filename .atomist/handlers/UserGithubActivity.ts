@@ -1,4 +1,4 @@
-import { HandleResponse, HandleEvent, Execute, Respondable, HandleCommand, Respond, Instruction, Response, HandlerContext, Plan } from '@atomist/rug/operations/Handlers'
+import { HandleResponse, HandleEvent, Execute, CommandRespondable, HandleCommand, Respond, Instruction, Response, HandlerContext, CommandPlan } from '@atomist/rug/operations/Handlers'
 import { TreeNode, Match, PathExpression } from '@atomist/rug//tree/PathExpression'
 import { EventHandler, ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
 import { Project } from '@atomist/rug/model/Core'
@@ -16,8 +16,8 @@ class GithubSearcher implements HandleCommand {
   @MappedParameter("atomist://correlation_id")
   corrid: string
 
-  handle(command: HandlerContext): Plan {
-    let result = new Plan()
+  handle(command: HandlerContext): CommandPlan {
+    let result = new CommandPlan()
     result.add(search(this.days))
     return result;
   }
@@ -28,7 +28,7 @@ export let searcher = new GithubSearcher();
 @ResponseHandler("SendActivity", "Sends recent GithubActivity to slack")
 class ActivityResponder implements HandleResponse<any>{
 
-  handle( @ParseJson response: Response<any>): Plan {
+  handle( @ParseJson response: Response<any>): CommandPlan {
     //return new Message(renderKitties(response.body()))
     //console.log()
     let notes: any[] = response.body();
@@ -39,11 +39,11 @@ class ActivityResponder implements HandleResponse<any>{
     relevant.forEach(function (note) {
       console.log(note.reason, note.subject.type, note.repository.full_name, note.subject.title, note.subject.url)
     })
-    return new Plan();
+    return new CommandPlan();
   }
 }
 
-function search(days: number): Respondable<Execute> {
+function search(days: number): CommandRespondable<Execute> {
 
   let date = new Date();
   date.setDate(date.getDate() - days);
@@ -68,12 +68,12 @@ function search(days: number): Respondable<Execute> {
 @ResponseHandler("HandleError", "Renders the error")
 class ErrorRenderer implements HandleResponse<any>{
 
-  handle( @ParseJson response: Response<any>): Plan {
+  handle( @ParseJson response: Response<any>): CommandPlan {
     //return new Message(renderKitties(response.body)
     console.log(JSON.stringify(response.body()))
     console.log(response.code)
     console.log(response.msg)
-    return new Plan();
+    return new CommandPlan();
   }
 }
 export let errors = new ErrorRenderer();

@@ -1,4 +1,4 @@
-import { HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage } from '@atomist/rug/operations/Handlers'
+import { HandleResponse, Execute, CommandPlan, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext, Plan, ResponseMessage } from '@atomist/rug/operations/Handlers'
 import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
 
 @CommandHandler("TheBigLebowski", "Get a random quote from the The Big Lebowski")
@@ -6,19 +6,23 @@ import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, P
 @Intent("the dude", "big lebowski", "what would the dude say?")
 class GetTheBigLebowskiQuote implements HandleCommand {
 
-    handle(ctx: HandlerContext): Plan {
-        let plan = new Plan();
-        let execute: Respondable<Execute> =
-        {instruction:
-              {name: "http",
-              kind: "execute",
-              parameters:
-                  {method: "get",
-                    url: ` http://lebowski.me/api/quotes/random`}},
-                    onSuccess: {kind: "respond", name: "SendBigLebowskiQuote"}}
-        plan.add(execute);
-        return plan;
-    }
+  handle(ctx: HandlerContext): CommandPlan {
+    let plan = new CommandPlan();
+    plan.add({
+      instruction:
+      {
+        name: "http",
+        kind: "execute",
+        parameters:
+        {
+          method: "get",
+          url: ` http://lebowski.me/api/quotes/random`
+        }
+      },
+      onSuccess: { kind: "respond", name: "SendBigLebowskiQuote" }
+    });
+    return plan;
+  }
 }
 
 export let theBigLebowskiQuote = new GetTheBigLebowskiQuote();
@@ -26,7 +30,7 @@ export let theBigLebowskiQuote = new GetTheBigLebowskiQuote();
 @ResponseHandler("SendBigLebowskiQuote", "Prints out a Big Lebowski quote")
 class BigLebowskiResponder implements HandleResponse<any>{
 
-  handle(@ParseJson response: Response<any>) : Plan {
+  handle( @ParseJson response: Response<any>): CommandPlan {
     let quote = (response.body as any).quote.lines[0]
     let character = quote.character.name
     var text = quote.text as string
@@ -38,7 +42,7 @@ class BigLebowskiResponder implements HandleResponse<any>{
     text = text.split("FUCK").join("F***")
     text = text.split("Fucked").join("F*****")
     text = text.split("fucked").join("f*****")
-    return Plan.ofMessage(new ResponseMessage(`${character}: _ ${text} _`));
+    return CommandPlan.ofMessage(new ResponseMessage(`${character}: _ ${text} _`));
   }
 }
 

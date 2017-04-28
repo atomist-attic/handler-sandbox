@@ -1,5 +1,5 @@
-import {HandleResponse, Execute, Respondable, HandleCommand, MappedParameters, Respond, Instruction, Response, HandlerContext , Plan, ResponseMessage, MessageMimeTypes} from '@atomist/rug/operations/Handlers'
-import {ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent} from '@atomist/rug/operations/Decorators'
+import { HandleResponse, Execute, HandleCommand, MappedParameters, Respond, CommandRespondable, Response, HandlerContext, CommandPlan, ResponseMessage, MessageMimeTypes } from '@atomist/rug/operations/Handlers'
+import { ResponseHandler, ParseJson, CommandHandler, Secrets, MappedParameter, Parameter, Tags, Intent } from '@atomist/rug/operations/Decorators'
 import * as mustache from 'mustache'
 
 const APISearchURL = `http://api.stackexchange.com/2.2/search/advanced?pagesize=3&order=desc&sort=relevance&site=stackoverflow&q=`
@@ -10,9 +10,9 @@ function renderAnswers(response: any, query: string): string {
   if (response['items'].length == 0) {
     return "No answers found."
   }
-  response['items'][ response['items'].length - 1 ].last = true;
+  response['items'][response['items'].length - 1].last = true;
 
-  try{
+  try {
     return mustache.render(`{
   "attachments": [
 {{#answers.items}}
@@ -34,8 +34,8 @@ function renderAnswers(response: any, query: string): string {
 		}
   ]
 }`,
-  {answers: response})
-  }catch(ex) {
+      { answers: response })
+  } catch (ex) {
     return `Failed to render message using template: ${ex}`
   }
 }
@@ -45,14 +45,14 @@ function renderAnswers(response: any, query: string): string {
 @Intent("stacko")
 class GetSOAnswer implements HandleCommand {
 
-    @Parameter({description: "Enter your search query", pattern: "^.*$"})
-    query: string;
+  @Parameter({ description: "Enter your search query", pattern: "^.*$" })
+  query: string;
 
-    handle(ctx: HandlerContext): Plan {
-        let result = new Plan();
-        result.add(search(this.query))
-        return result;
-    }
+  handle(ctx: HandlerContext): CommandPlan {
+    let result = new CommandPlan();
+    result.add(search(this.query))
+    return result;
+  }
 }
 
 export let SOAnswer = new GetSOAnswer();
@@ -60,24 +60,30 @@ export let SOAnswer = new GetSOAnswer();
 @ResponseHandler("SendSOAnswer", "Shows answers to a query on Stack Overflow")
 class SOResponder implements HandleResponse<any>{
 
-  @Parameter({description: "Enter your search query", pattern: "^.*$"})
+  @Parameter({ description: "Enter your search query", pattern: "^.*$" })
   query: string;
 
-  handle(@ParseJson response: Response<any>) : Plan {
-    return Plan.ofMessage(new ResponseMessage(renderAnswers(response.body, encodeURI(this.query)), MessageMimeTypes.SLACK_JSON));
-   }
+  handle( @ParseJson response: Response<any>): CommandPlan {
+    return CommandPlan.ofMessage(new ResponseMessage(renderAnswers(response.body, encodeURI(this.query)), MessageMimeTypes.SLACK_JSON));
+  }
 }
 
-function search (query: string): Respondable<Execute> {
-    let searchUrl = encodeURI(APISearchURL + query);
-    
-    return {instruction:
-              {name: "http",
-              kind: "execute",
-              parameters:
-                  {method: "get",
-                    url: searchUrl}},
-                    onSuccess: {kind: "respond", name: "SendSOAnswer", parameters: { query: query }}}
+function search(query: string): CommandRespondable<Execute> {
+  let searchUrl = encodeURI(APISearchURL + query);
+
+  return {
+    instruction:
+    {
+      name: "http",
+      kind: "execute",
+      parameters:
+      {
+        method: "get",
+        url: searchUrl
+      }
+    },
+    onSuccess: { kind: "respond", name: "SendSOAnswer", parameters: { query: query } }
+  }
 }
 
 export let responder = new SOResponder();
